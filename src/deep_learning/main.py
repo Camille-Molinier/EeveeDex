@@ -15,6 +15,7 @@ print(" Done\n")
 
 print(f"{'    Tensorflow modules' :-<50}", end="")
 import tensorflow as tf
+from tensorflow import keras
 from tensorflow.keras import layers
 print(" Done\n")
 
@@ -86,6 +87,13 @@ model = tf.keras.Sequential([
 ])
 
 model.compile(optimizer='adam', loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+
+logdir='../../dat/logs'
+
+tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir,histogram_freq=1, write_images=logdir,
+                                                   embeddings_data=train_data)
+
+model.fit(train_data, validation_data=val_data,  epochs=20, callbacks=[tensorboard_callback])
 
 
 ####################################################################################################

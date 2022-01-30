@@ -1,3 +1,4 @@
+from pickletools import optimize
 import time
 
 from numpy import extract
@@ -14,6 +15,7 @@ print(" Done\n")
 
 print(f"{'    Tensorflow modules' :-<50}", end="")
 import tensorflow as tf
+from tensorflow.keras import layers
 print(" Done\n")
 
 ####################################################################################################
@@ -59,6 +61,32 @@ val_data = tf.keras.preprocessing.image_dataset_from_directory(
 
 class_names = val_data.class_names
 print(f'\n    Class names : {class_names}')
+
+####################################################################################################
+#                                          NEURAL NETWORK                                          #
+####################################################################################################
+nb_classes = 9
+
+model = tf.keras.Sequential([
+    layers.experimental.preprocessing.Rescaling(1./255),        # Rescale all image
+    layers.Conv2D(128,4, activation='relu'),                    # Convolution 
+    layers.MaxPooling2D(),                                      # Choose max in area
+    layers.experimental.preprocessing.Rescaling(1./255),        # Repeate with lower conv
+    layers.Conv2D(64,4, activation='relu'),
+    layers.MaxPooling2D(),
+    layers.experimental.preprocessing.Rescaling(1./255),
+    layers.Conv2D(32,4, activation='relu'),
+    layers.MaxPooling2D(),
+    layers.experimental.preprocessing.Rescaling(1./255),
+    layers.Conv2D(16,4, activation='relu'),
+    layers.MaxPooling2D(),
+    layers.Flatten(),                                           # Matrix -> Vector
+    layers.Dense(64, activation='relu'),                        # "Standard nn"
+    layers.Dense(nb_classes, activation='softmax')              # softmax for all classes probabilities
+])
+
+model.compile(optimizer='adam', loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+
 
 ####################################################################################################
 print(f'\nProcessing complete (time : {round(time.time()-start, 4)}s)')

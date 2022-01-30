@@ -21,23 +21,25 @@ print(" Done\n")
 ####################################################################################################
 print('Loading data : \n')
 
-data_dir = pathlib.Path('../../dataset')
-val_dir = pathlib.Path('../../validation_set')
+data_path = os.path.join('..', '..', 'dataset')
+
+data_dir = pathlib.Path(f'{data_path}/training_set')
+val_dir = pathlib.Path(f'{data_path}/validation_set')
 
 image_count_dat = len(list(data_dir.glob('*/*.*')))
 print(f'    Dataset images    : {image_count_dat}')
 image_count_val = len(list(val_dir.glob('*/*.*')))
 print(f'    Validation images : {image_count_val}')
 
-batch_size = 3
-img_height = 200
-img_width = 200
-
 
 ####################################################################################################
 #                                       PREPROCESSING DATA                                         #
 ####################################################################################################
 print('Preprocessing data :\n')
+
+batch_size = 3
+img_height = 200
+img_width = 200
 
 train_data = tf.keras.preprocessing.image_dataset_from_directory(
   data_dir,
